@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RED PLANET RESCUE | Mars Mission Trainer</title>
+<style>
+:root{--bg:#090d16;--panel:#131c2b;--panel2:#1a2638;--text:#f3f5fa;--muted:#a7b2c4;--red:#f16a4b;--orange:#ff9b62;--green:#62d6a3;--blue:#70b9ff;--border:#29384d}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top,#252333 0,#0b111d 42%,#070b12 100%);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.6}
+header{padding:48px 20px 35px;text-align:center;background:linear-gradient(130deg,#321c20,#172338 65%,#101725);border-bottom:1px solid var(--border)}
+.eyebrow{color:var(--orange);letter-spacing:4px;font-size:12px;font-weight:bold}
+h1{margin:10px 0;font-size:clamp(34px,7vw,64px);letter-spacing:2px}
+header p{color:#c2cbd8;max-width:650px;margin:0 auto}
+.container{width:min(1100px,92%);margin:28px auto}
+.section-title{font-size:22px;margin:28px 0 14px}
+.panel{background:linear-gradient(145deg,var(--panel),#101827);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 10px 28px #0003}
+.muted{color:var(--muted);font-size:14px}
+.resources{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px}
+.resource{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:14px}
+.resource strong{display:block;font-size:24px;margin-top:4px}
+.resource small{color:var(--muted)}
+.bar{height:7px;background:#303b4d;border-radius:20px;overflow:hidden;margin-top:10px}
+.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--orange));border-radius:20px;transition:width .3s}
+.mission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.mission-card{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:.2s}
+.mission-card:hover{border-color:var(--orange);transform:translateY(-2px)}
+.mission-card.active{border:1px solid var(--red);background:#30232a}
+.mission-card h3{margin:4px 0 7px;font-size:16px}
+.mission-card p{font-size:13px;color:var(--muted);margin:0}
+button,.source-link{display:inline-block;background:var(--red);color:white;border:0;border-radius:9px;padding:11px 17px;font-weight:bold;cursor:pointer;text-decoration:none;margin:5px 5px 5px 0}
+button:hover,.source-link:hover{background:#ff805d}
+button.secondary,.source-link.secondary{background:#26364c;border:1px solid #40536d}
+button:disabled{opacity:.45;cursor:not-allowed}
+.choice{display:block;width:100%;text-align:left;background:#1b293d;border:1px solid #35465e;margin:10px 0;line-height:1.5}
+.choice:hover{background:#293b54}
+.status{border-left:3px solid var(--blue);background:#17283a;padding:12px 14px;border-radius:7px;margin:12px 0;overflow-wrap:anywhere}
+.status.good{border-color:var(--green)}
+.status.warn{border-color:var(--orange)}
+.status.bad{border-color:#ff6c6c}
+.data-row{padding:12px 0;border-bottom:1px solid var(--border)}
+.data-row:last-child{border-bottom:0}
+.data-label{color:var(--orange);font-weight:bold}
+footer{text-align:center;color:var(--muted);padding:30px 15px;border-top:1px solid var(--border);font-size:12px}
+a{color:#9ccfff}
+.hidden{display:none}
+@media(max-width:600px){header{padding:35px 15px}.panel{padding:15px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">MARS EXPLORATION • MISSION SIMULATOR</div>
+  <h1>RED PLANET RESCUE</h1>
+  <p>Become the commander of a Mars outpost. Make decisions, protect your crew and manage essential resources.</p>
+</header>
+
+<main class="container">
+
+<section class="panel">
+<h2 class="section-title">Mission Control</h2>
+<p class="muted">Your objective: keep the Mars crew safe while managing five essential outpost resources.</p>
+<div class="resources">
+  <div class="resource">💧 Water<strong id="waterValue">80%</strong><div class="bar"><span id="waterBar" style="width:80%"></span></div><small>Illustrative game value</small></div>
+  <div class="resource">🫁 Oxygen<strong id="oxygenValue">85%</strong><div class="bar"><span id="oxygenBar" style="width:85%"></span></div><small>Illustrative game value</small></div>
+  <div class="resource">⚡ Power<strong id="powerValue">75%</strong><div class="bar"><span id="powerBar" style="width:75%"></span></div><small>Illustrative game value</small></div>
+  <div class="resource">🥬 Food<strong id="foodValue">90%</strong><div class="bar"><span id="foodBar" style="width:90%"></span></div><small>Illustrative game value</small></div>
+  <div class="resource">🛡️ Radiation Protection<strong id="shieldValue">80%</strong><div class="bar"><span id="shieldBar" style="width:80%"></span></div><small>Illustrative game value</small></div>
+</div>
+<p class="muted">These percentages are game mechanics, not actual NASA measurements or recommended astronaut safety limits.</p>
+</section>
+
+<h2 class="section-title">Choose Your Mission</h2>
+<section class="mission-grid">
+  <div class="mission-card active" data-mission="0"><h3>☀️ Solar Storm</h3><p>Respond to a space-weather alert.</p></div>
+  <div class="mission-card" data-mission="1"><h3>💧 Water Recycling</h3><p>Manage a water recovery problem.</p></div>
+  <div class="mission-card" data-mission="2"><h3>🫁 Oxygen Warning</h3><p>Respond to an oxygen system issue.</p></div>
+  <div class="mission-card" data-mission="3"><h3>🥬 Food Supply</h3><p>Protect the crew's food supply.</p></div>
+  <div class="mission-card" data-mission="4"><h3>🛡️ Radiation Alert</h3><p>Choose a protective response.</p></div>
+</section>
+
+<section class="panel" id="missionPanel">
+<h2 id="missionTitle">☀️ Solar Storm</h2>
+<p id="missionDescription" class="muted"></p>
+<div id="missionSituation" class="status warn"></div>
+<h3>Commander, choose your action:</h3>
+<div id="choices"></div>
+<div id="feedback" aria-live="polite"></div>
+<button id="nextButton" class="hidden">Next Mission →</button>
+</section>
+
+<section class="panel">
+<h2 class="section-title">🛰️ NASA Space Weather & Radiation Data</h2>
+<p class="muted">NASA research data provides scientific context. It does not control the simulator's illustrative resource percentages.</p>
+
+<div class="data-row">
+<div class="data-label">NASA DONKI — Space Weather</div>
+<p id="donkiStatus" class="muted">Connecting to NASA...</p>
+<div id="donkiDetails"></div>
+<a class="source-link secondary" href="https://ccmc.gsfc.nasa.gov/tools/DONKI/" target="_blank" rel="noopener">Open DONKI ↗</a>
+</div>
+
+<div class="data-row">
+<div class="data-label">NASA RadLab — Mars Radiation Measurements</div>
+<p class="muted">The official RadLab portal lists archived radiation datasets from Mars robotic missions.</p>
+<div id="radlabDetails">
+<div class="status good">
+<strong>Mars Surface — Curiosity</strong>
+<p>Spacecraft: Curiosity</p>
+<p>Instrument: MSL-RAD</p>
+<p>Radiation measurements collected by the Radiation Assessment Detector on the Mars Science Laboratory rover.</p>
+</div>
+<div class="status good">
+<strong>Mars Orbit — TGO</strong>
+<p>Spacecraft: Trace Gas Orbiter (TGO)</p>
+<p>Instruments: Liulin-MO-AB and Liulin-MO-CD</p>
+<p>Archived radiation measurements associated with TGO at Mars.</p>
+</div>
+<div class="status good">
+<strong>Mars Cruise — TGO</strong>
+<p>Spacecraft: Trace Gas Orbiter (TGO)</p>
+<p>Instrument family: Liulin</p>
+<p>Archived measurements associated with the spacecraft's Mars cruise trajectory.</p>
+</div>
+<div class="status warn">
+The RadLab data API returned a server error during testing. This page displays dataset availability only; it does not claim to show actual radiation readings.
+</div>
+<a class="source-link secondary" href="https://visualization.osdr.nasa.gov/radlab/gui/" target="_blank" rel="noopener">Explore measurements in RadLab ↗</a>
+<a class="source-link secondary" href="https://visualization.osdr.nasa.gov/radlab/gui/data-api/" target="_blank" rel="noopener">Read RadLab API documentation ↗</a>
+</div>
+</div>
+
+<button id="refreshData" class="secondary">↻ Refresh NASA Data</button>
+<p class="muted">RadLab measurements are archived mission data, not live readings from a human Mars habitat. DONKI notifications are preliminary research products, not direct Mars surface radiation measurements.</p>
+</section>
+
+<section class="panel">
+<h2 class="section-title">🔬 Explore Scientific Sources</h2>
+<div class="data-row"><strong>NASA Mars Trek</strong><p class="muted">Explore Mars maps, terrain and scientific imagery.</p><a class="source-link secondary" href="https://trek.nasa.gov/mars/" target="_blank" rel="noopener">Explore Mars Trek ↗</a></div>
+<div class="data-row"><strong>NASA Open Science Data Repository</strong><p class="muted">Research datasets related to space biology and human spaceflight.</p><a class="source-link secondary" href="https://osdr.nasa.gov/bio/repo/" target="_blank" rel="noopener">Explore OSDR ↗</a></div>
+<div class="data-row"><strong>Canadian Space Agency — Food Production Toolkit</strong><p class="muted">Educational resources about growing food in space.</p><a class="source-link secondary" href="https://www.asc-csa.gc.ca/eng/youth-educators/toolkits/food-production/" target="_blank" rel="noopener">Explore CSA Toolkit ↗</a></div>
+<div class="data-row"><strong>NASA Open APIs</strong><p class="muted">Public NASA APIs for space and science applications.</p><a class="source-link secondary" href="https://api.nasa.gov/" target="_blank" rel="noopener">Explore NASA APIs ↗</a></div>
+</section>
+
+<section class="panel">
+<h2 class="section-title">🏁 Mission Report</h2>
+<p id="missionCount">Missions completed: 0 / 5</p>
+<p id="score">Mission score: 0</p>
+<p id="finalMessage" class="muted">Complete all five missions to receive your mission report.</p>
+<button id="restartButton" class="secondary">Restart Simulation</button>
+</section>
+
+</main>
+
+<footer>
+RED PLANET RESCUE — Educational Mars Outpost Simulator<br>
+NASA and CSA resources are credited as scientific references.<br>
+This student project is not affiliated with or endorsed by NASA.<br>
+Simulation values are illustrative, not operational guidance.
+</footer>
+
+<script>
+const initialResources={water:80,oxygen:85,power:75,food:90,shield:80};
+let resources={...initialResources};
+let currentMission=0;
+let completed=[];
+let score=0;
+let answered=false;
+
+const missions=[
+{
+title:"☀️ Solar Storm",
+description:"A space-weather alert has reached Mission Control. Your crew needs a safe plan.",
+situation:"A solar event has been reported. The crew must follow mission procedures and monitor official updates.",
+choices:[
+{text:"Move crew to the designated protected area and follow mission procedures.",change:{power:-5,shield:8},points:20,feedback:"Good decision! Following the mission's radiation protection procedures is the priority."},
+{text:"Ignore the alert and continue outdoor activities.",change:{shield:-15},points:0,feedback:"That is not a safe response. Space-weather alerts should be taken seriously."},
+{text:"Check official space-weather information and coordinate with Mission Control.",change:{power:-2,shield:5},points:15,feedback:"Good! Reliable information and coordinated decisions matter."}
+]},
+{
+title:"💧 Water Recycling",
+description:"The water recovery system is not working as expected.",
+situation:"Water availability is becoming a concern. The crew needs to conserve and inspect the recovery system.",
+choices:[
+{text:"Inspect the recovery system and reduce unnecessary water use.",change:{water:10,power:-3},points:20,feedback:"Excellent! System inspection and conservation are sensible responses."},
+{text:"Use extra water without checking the system.",change:{water:-15},points:0,feedback:"This wastes a limited resource. Conservation is important."},
+{text:"Pause non-essential water activities and report the issue.",change:{water:5},points:15,feedback:"Good choice! Prioritizing essential needs protects the crew."}
+]},
+{
+title:"🫁 Oxygen Warning",
+description:"A warning appears in the habitat's oxygen monitoring system.",
+situation:"The crew must respond to the warning using established life-support procedures.",
+choices:[
+{text:"Follow emergency procedures and inspect the life-support system.",change:{oxygen:10,power:-5},points:20,feedback:"Correct! Follow procedures and check the system rather than guessing."},
+{text:"Ignore the warning because the crew feels fine.",change:{oxygen:-15},points:0,feedback:"A monitoring warning should never be ignored."},
+{text:"Notify Mission Control and review system readings.",change:{oxygen:5,power:-2},points:15,feedback:"Good response! Communication and monitoring are essential."}
+]},
+{
+title:"🥬 Food Supply",
+description:"A delay in the next supply delivery creates a food management challenge.",
+situation:"The crew needs to manage available food and consider sustainable production.",
+choices:[
+{text:"Review food inventory and plan balanced portions.",change:{food:10,power:-2},points:20,feedback:"Excellent! Inventory planning helps manage limited supplies."},
+{text:"Use supplies without checking the remaining inventory.",change:{food:-15},points:0,feedback:"Without inventory planning, the crew may run short."},
+{text:"Study controlled plant-growing options for future supply.",change:{food:5,power:-4},points:15,feedback:"Good thinking! Research into space food production supports long-term missions."}
+]},
+{
+title:"🛡️ Radiation Alert",
+description:"Mission Control asks the crew to review its radiation protection plan.",
+situation:"Space radiation is an important challenge for human exploration. The crew must follow the habitat's protection plan.",
+choices:[
+{text:"Follow the designated shelter plan and monitor official updates.",change:{shield:10,power:-3},points:20,feedback:"Good decision! Use established protection procedures and reliable monitoring."},
+{text:"Treat the alert as unimportant and ignore the plan.",change:{shield:-15},points:0,feedback:"Ignoring a radiation alert is not an appropriate response."},
+{text:"Review the available data and coordinate with Mission Control.",change:{shield:5,power:-2},points:15,feedback:"Good! Data-informed decisions and communication are important."}
+]}
+];
+
+function updateResources(){
+Object.keys(initialResources).forEach(key=>{
+const value=Math.max(0,Math.min(100,resources[key]));
+resources[key]=value;
+document.getElementById(key+"Value").textContent=value+"%";
+document.getElementById(key+"Bar").style.width=value+"%";
+});
+}
+
+function renderMission(){
+const mission=missions[currentMission];
+answered=false;
+document.getElementById("missionTitle").textContent=mission.title;
+document.getElementById("missionDescription").textContent=mission.description;
+document.getElementById("missionSituation").textContent=mission.situation;
+document.getElementById("feedback").innerHTML="";
+document.getElementById("nextButton").classList.add("hidden");
+
+document.querySelectorAll(".mission-card").forEach((card,index)=>{
+card.classList.toggle("active",index===currentMission);
+});
+
+const choices=document.getElementById("choices");
+choices.innerHTML="";
+mission.choices.forEach((choice,index)=>{
+const button=document.createElement("button");
+button.className="choice";
+button.textContent=(index+1)+". "+choice.text;
+button.addEventListener("click",()=>chooseAction(index));
+choices.appendChild(button);
+});
+}
+
+function chooseAction(index){
+if(answered||completed.includes(currentMission))return;
+answered=true;
+const choice=missions[currentMission].choices[index];
+
+Object.keys(choice.change).forEach(key=>{resources[key]+=choice.change[key];});
+score+=choice.points;
+completed.push(currentMission);
+updateResources();
+
+document.querySelectorAll("#choices button").forEach(button=>button.disabled=true);
+
+const feedback=document.getElementById("feedback");
+feedback.innerHTML="";
+const message=document.createElement("div");
+message.className="status "+(choice.points>=15?"good":"bad");
+message.textContent=choice.feedback;
+feedback.appendChild(message);
+
+const result=document.createElement("p");
+result.className="muted";
+result.textContent="Points earned: "+choice.points;
+feedback.appendChild(result);
+
+document.getElementById("missionCount").textContent="Missions completed: "+completed.length+" / 5";
+document.getElementById("score").textContent="Mission score: "+score;
+
+const next=document.getElementById("nextButton");
+next.textContent=completed.length===5?"View Final Report":"Next Mission →";
+next.classList.remove("hidden");
+}
+
+document.getElementById("nextButton").addEventListener("click",()=>{
+if(completed.length===5){showFinalReport();return;}
+let next=missions.findIndex((m,i)=>!completed.includes(i));
+if(next!==-1){currentMission=next;renderMission();}
+});
+
+function showFinalReport(){
+document.getElementById("missionTitle").textContent="🏆 Mission Complete!";
+document.getElementById("missionDescription").textContent="You have completed all five Mars outpost missions.";
+document.getElementById("missionSituation").textContent="Your decisions have been recorded in the mission report.";
+document.getElementById("choices").innerHTML="";
+document.getElementById("feedback").innerHTML='<div class="status good">Final score: '+score+' / 100</div>';
+document.getElementById("nextButton").classList.add("hidden");
+
+let message="Mission completed. Keep exploring space science!";
+if(score>=85)message="Outstanding command decisions!";
+else if(score>=60)message="Good work, Commander! Keep learning.";
+else message="Mission completed. Review the decisions and try again.";
+document.getElementById("finalMessage").textContent=message;
+}
+
+function restartGame(){
+resources={...initialResources};
+currentMission=0;
+completed=[];
+score=0;
+document.getElementById("missionCount").textContent="Missions completed: 0 / 5";
+document.getElementById("score").textContent="Mission score: 0";
+document.getElementById("finalMessage").textContent="Complete all five missions to receive your mission report.";
+updateResources();
+renderMission();
+}
+
+document.getElementById("restartButton").addEventListener("click",restartGame);
+
+document.querySelectorAll(".mission-card").forEach(card=>{
+card.addEventListener("click",()=>{
+const selected=Number(card.dataset.mission);
+if(completed.includes(selected)){
+document.getElementById("feedback").textContent="You have already completed this mission. Restart to play again.";
+return;
+}
+currentMission=selected;
+renderMission();
+});
+});
+
+// NASA DONKI: fetch notifications and show a concise Mars-related summary.
+async function loadDonki(){
+const status=document.getElementById("donkiStatus");
+const details=document.getElementById("donkiDetails");
+status.textContent="Connecting to NASA DONKI...";
+details.innerHTML="";
+
+try{
+const end=new Date();
+const start=new Date();
+start.setDate(end.getDate()-30);
+const dateText=date=>date.toISOString().slice(0,10);
+const url="https://api.nasa.gov/DONKI/notifications?startDate="+dateText(start)+"&endDate="+dateText(end)+"&type=all&api_key=DEMO_KEY";
+
+const response=await fetch(url);
+if(!response.ok)throw new Error("NASA DONKI response: "+response.status);
+const data=await response.json();
+
+if(!Array.isArray(data)||data.length===0){
+status.textContent="NASA connected, but no notifications were returned for this period.";
+return;
+}
+
+status.textContent="NASA DONKI connected. "+data.length+" notifications received in the selected 30-day period.";
+
+const marsEvents=data.filter(item=>{
+const body=(item.messageBody||"").toLowerCase();
+return body.includes("mars")&&(body.includes("cme")||body.includes("coronal mass ejection"));
+});
+
+marsEvents.sort((a,b)=>String(b.messageIssueTime||"").localeCompare(String(a.messageIssueTime||"")));
+
+if(marsEvents.length){
+const latest=marsEvents[0];
+const body=latest.messageBody||"";
+const box=document.createElement("div");
+box.className="status warn";
+
+const heading=document.createElement("strong");
+heading.textContent="Mars-related space-weather report";
+
+const date=document.createElement("p");
+date.textContent="NASA message date: "+(latest.messageIssueTime||"Not specified");
+
+const summary=document.createElement("p");
+summary.textContent="NASA's preliminary modeling reported a coronal mass ejection (CME) with a predicted glancing-blow arrival at Mars on November 13, 2026, approximately ±7 hours. This was a forecast, not a confirmed measurement of radiation at the Martian surface.";
+
+const speed=document.createElement("p");
+speed.textContent="Reported CME speed: approximately 726 km/s.";
+
+const statusLine=document.createElement("p");
+statusLine.textContent="Forecast status: the predicted arrival time has passed. This notification should not be treated as a current warning.";
+
+box.append(heading,date,summary,speed,statusLine);
+details.appendChild(box);
+
+}else{
+const box=document.createElement("div");
+box.className="status";
+box.textContent="No Mars-related CME notification was identified in the returned notifications. This does not mean there is no space-weather activity.";
+details.appendChild(box);
+}
+
+const link=document.createElement("a");
+link.href="https://ccmc.gsfc.nasa.gov/tools/DONKI/";
+link.target="_blank";
+link.rel="noopener";
+link.textContent="View original NASA DONKI records ↗";
+details.appendChild(link);
+
+}catch(error){
+status.textContent="Could not load DONKI data in this browser session. Open the NASA source directly.";
+console.error("DONKI error:",error);
+}
+}
+
+function refreshNASAData(){
+loadDonki();
+}
+
+document.getElementById("refreshData").addEventListener("click",refreshNASAData);
+updateResources();
+renderMission();
+refreshNASAData();
+</script>
+</body>
+</html>
