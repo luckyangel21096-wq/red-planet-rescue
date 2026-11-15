@@ -84,7 +84,7 @@ a{color:#9ccfff}
 <h2 id="missionTitle">☀️ Solar Storm</h2>
 <p id="missionDescription" class="muted"></p>
 <div id="missionSituation" class="status warn"></div>
-<h3>Commander, choose your action:</h3>
+<h3 id="commanderHeading">Commander, choose your action:</h3>
 <div id="choices"></div>
 <div id="feedback" aria-live="polite"></div>
 <button id="nextButton" class="hidden">Next Mission →</button>
@@ -229,6 +229,7 @@ function renderMission(){
 const mission=missions[currentMission];
 answered=false;
 document.getElementById("missionTitle").textContent=mission.title;
+document.getElementById("commanderHeading").style.display="block";
 document.getElementById("missionDescription").textContent=mission.description;
 document.getElementById("missionSituation").textContent=mission.situation;
 document.getElementById("feedback").innerHTML="";
@@ -289,6 +290,7 @@ if(next!==-1){currentMission=next;renderMission();}
 
 function showFinalReport(){
 document.getElementById("missionTitle").textContent="🏆 Mission Complete!";
+document.getElementById("commanderHeading").style.display="none";
 document.getElementById("missionDescription").textContent="You have completed all five Mars outpost missions.";
 document.getElementById("missionSituation").textContent="Your decisions have been recorded in the mission report.";
 document.getElementById("choices").innerHTML="";
